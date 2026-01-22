@@ -7,75 +7,55 @@ Web aplikasi untuk melacak lokasi anggota keluarga secara real-time dengan fitur
 - 📍 **Real-time Location Tracking** - Lacak lokasi anggota keluarga secara langsung
 - 👨‍👩‍👧‍👦 **Family Management** - Sistem keluarga dengan kode invite
 - 🖥️ **Screen Sharing** - Berbagi layar antar anggota keluarga
-- 📱 **24/7 Tracking** - Tracking berlanjut даже ketika aplikasi ditutup
+- 📱 **24/7 Tracking** - Tracking berlanjut bahkan ketika aplikasi ditutup
 - 🗺️ **Interactive Map** - Peta interaktif dengan Leaflet (OpenStreetMap)
 - 📊 **Location History** - Riwayat pergerakan anggota keluarga
 
-## 🚀 Deployment ke GitHub + Platform Gratis
+## 🚀 Deployment ke Railway (Gratis)
 
-### 1. Push ke GitHub
+Aplikasi ini membutuhkan backend server (Node.js + Socket.io), jadi deploy ke Railway yang support Node.js.
+
+### 1. Push ke GitHub (Jika belum)
 
 ```bash
-# Buat repository di GitHub.com terlebih dahulu
-# Kemudian jalankan:
-
 cd family-tracker
 git add .
 git commit -m "Initial commit: Family Location Tracker"
 git branch -M main
-git remote add origin https://github.com/USERNAME/REPOSITORY_NAME.git
+git remote add origin https://github.com/hallosatya-cloud/family-location-tracker.git
 git push -u origin main
 ```
 
-### 2. Deploy ke Railway (Gratis)
+### 2. Setup di Railway
 
 1. Buka https://railway.app
 2. Login dengan GitHub
 3. Klik **"New Project"** → **"Deploy from GitHub repo"**
-4. Pilih repository ini
+4. Pilih repository: `hallosatya-cloud/family-location-tracker`
 5. Railway akan auto-detect Node.js app
-6. Tambahkan environment variable `PORT=3000`
+6. Di tab **"Variables"**, tambahkan:
+   - `PORT` = `3000`
+   - `NODE_ENV` = `production`
 7. Klik **"Deploy"**
+
+### 3. Setup GitHub Actions Auto-Deploy
+
+1. Dapatkan Railway Token: https://railway.app/account/tokens
+2. Buka: https://github.com/hallosatya-cloud/family-location-tracker/settings/secrets/actions
+3. Klik **"New repository secret"**
+4. Name: `RAILWAY_TOKEN`
+5. Value: (paste token dari langkah 1)
+6. Klik **"Add secret"**
 
 **URL Publik:** https://your-app.railway.app
 
-### 3. Deploy ke Render (Gratis)
+### 4. Auto-Deploy
 
-1. Buka https://render.com
-2. Login dengan GitHub
-3. Klik **"New"** → **"Web Service"**
-4. Connect repository GitHub
-5. Settings:
-   - Build Command: `npm install`
-   - Start Command: `node server.js`
-   - Environment: `Node`
-6. Klik **"Create Web Service"**
+Setiap kali ada push ke branch `main`, Railway akan auto-deploy. Cek status di:
+- GitHub Actions: https://github.com/hallosatya-cloud/family-location-tracker/actions
+- Railway Dashboard: https://railway.app/dashboard
 
-**URL Publik:** https://your-app.onrender.com
-
-### 4. Deploy ke Vercel (Gratis + Fast)
-
-1. Install Vercel CLI:
-```bash
-npm i -g vercel
-```
-
-2. Deploy:
-```bash
-vercel --prod
-```
-
-**URL Publik:** https://your-project.vercel.app
-
-### 5. Deploy ke Cyclic (Gratis + Simple)
-
-1. Buka https://cyclic.sh
-2. Login dengan GitHub
-3. Klik **"Link Your Repo"**
-4. Pilih repository ini
-5. Otomatis deploy!
-
-**URL Publik:** https://your-app.cyclic.sh
+---
 
 ## 📱 Cara Penggunaan
 
@@ -105,7 +85,7 @@ vercel --prod
 
 ```bash
 # Clone repository
-git clone https://github.com/USERNAME/REPOSITORY_NAME.git
+git clone https://github.com/hallosatya-cloud/family-location-tracker.git
 cd family-tracker
 
 # Install dependencies
@@ -121,15 +101,18 @@ npm start
 
 ```
 family-tracker/
-├── server.js          # Backend (Express + Socket.io)
-├── package.json       # Dependencies
+├── server.js              # Backend (Express + Socket.io)
+├── package.json           # Dependencies
 ├── .gitignore
+├── .github/
+│   └── workflows/
+│       └── deploy.yml     # GitHub Actions untuk Railway
 ├── README.md
 └── public/
-    ├── index.html     # Halaman utama
-    ├── app.js         # Logic frontend & tracking
-    ├── styles.css     # Styling
-    └── sw.js          # Service Worker (background sync)
+    ├── index.html         # Halaman utama
+    ├── app.js             # Logic frontend & tracking
+    ├── styles.css         # Styling
+    └── sw.js              # Service Worker (background sync)
 ```
 
 ## 🔧 API Endpoints
@@ -146,10 +129,9 @@ family-tracker/
 
 ## 📝 Catatan
 
-- Untuk akses publik, deploy ke Railway/Render/Vercel/Cyclic
-- Ngrok memerlukan authtoken untuk akses publik
-- Data lokasi disimpan di `data.json` (bisa换成 database production)
+- Data lokasi disimpan di `data.json` (bisa diganti dengan database production di Railway)
 - Screen sharing menggunakan WebRTC (peer-to-peer)
+- Railway memberikan gratis 500 jam/bulan untuk hobby plan
 
 ## 📄 License
 
