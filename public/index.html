@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Family Location Tracker</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- Login Page -->
+    <div id="loginPage" class="page active">
+      <div class="container">
+        <h1>🏠 Family Location Tracker</h1>
+        <div class="tabs">
+          <button class="tab-btn active" onclick="showTab('login')">Login</button>
+          <button class="tab-btn" onclick="showTab('register')">Register</button>
+        </div>
+
+        <div id="loginTab" class="tab-content active">
+          <form id="loginForm">
+            <input type="text" id="loginUsername" placeholder="Username" required>
+            <input type="password" id="loginPassword" placeholder="Password" required>
+            <button type="submit">Login</button>
+          </form>
+        </div>
+
+        <div id="registerTab" class="tab-content">
+          <form id="registerForm">
+            <input type="text" id="regUsername" placeholder="Username" required>
+            <input type="password" id="regPassword" placeholder="Password" required>
+            <div class="radio-group">
+              <label>
+                <input type="radio" name="userType" value="admin" checked> Admin Keluarga
+              </label>
+              <label>
+                <input type="radio" name="userType" value="member"> Anggota Keluarga
+              </label>
+            </div>
+            <div id="familyNameGroup">
+              <input type="text" id="familyName" placeholder="Nama Keluarga Baru">
+            </div>
+            <div id="inviteCodeGroup" style="display: none;">
+              <input type="text" id="inviteCode" placeholder="Kode Invite">
+            </div>
+            <button type="submit">Register</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dashboard Page -->
+    <div id="dashboardPage" class="page">
+      <header>
+        <h2>👨‍👩‍👧‍👦 Family Tracker</h2>
+        <div class="user-info">
+          <span id="currentUser"></span>
+          <button onclick="logout()" class="btn-danger">Logout</button>
+        </div>
+      </header>
+
+      <div class="main-content">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+          <div class="member-list">
+            <h3>Anggota Keluarga</h3>
+            <ul id="memberList"></ul>
+          </div>
+          
+          <div class="invite-section">
+            <h3>Kode Invite Keluarga</h3>
+            <div id="inviteCodeDisplay">Loading...</div>
+            <button onclick="copyInviteCode()">Salin Kode</button>
+          </div>
+
+          <div class="tracking-controls">
+            <h3>Pengaturan Tracking</h3>
+            <label class="switch">
+              <input type="checkbox" id="shareLocation" checked>
+              <span class="slider"></span>
+            </label>
+            <span>Berbagi Lokasi Saya</span>
+            
+            <div class="location-interval">
+              <label>Interval Update Lokasi:</label>
+              <select id="updateInterval">
+                <option value="5000">5 detik</option>
+                <option value="10000" selected>10 detik</option>
+                <option value="30000">30 detik</option>
+                <option value="60000">1 menit</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="screen-share-controls">
+            <h3>Screen Sharing</h3>
+            <button id="startShareBtn" onclick="startScreenShare()">Mulai Berbagi Layar</button>
+            <button id="stopShareBtn" onclick="stopScreenShare()" style="display: none;" class="btn-danger">Berhenti Berbagi</button>
+          </div>
+        </aside>
+
+        <!-- Map Area -->
+        <main class="map-container">
+          <div id="map"></div>
+          <div class="map-controls">
+            <button onclick="centerOnMyLocation()">📍 Lokasi Saya</button>
+            <button onclick="showAllMembers()">👀 Lihat Semua</button>
+          </div>
+        </main>
+
+        <!-- Screen Share Modal -->
+        <div id="screenShareModal" class="modal">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h3>Screen Sharing</h3>
+              <button onclick="closeScreenShareModal()" class="close">&times;</button>
+            </div>
+            <div class="modal-body">
+              <div id="pendingRequests" class="pending-requests" style="display: none;">
+                <h4>Permintaan Screen Share</h4>
+                <div id="requestsList"></div>
+              </div>
+              <div id="viewingScreen" class="viewing-screen" style="display: none;">
+                <video id="remoteVideo" autoplay playsinline></video>
+                <p>Menampilkan layar: <span id="sharedBy"></span></p>
+              </div>
+              <div id="noSharing" class="no-sharing">
+                <p>Tidak ada yang sedang berbagi layar</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Location Info Panel -->
+        <div id="locationPanel" class="location-panel">
+          <h3>Info Lokasi</h3>
+          <div id="locationInfo"></div>
+          <button onclick="closeLocationPanel()" class="close-btn">Tutup</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="app.js"></script>
+  
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('Service Worker registered:', reg.scope))
+        .catch(err => console.log('Service Worker registration failed:', err));
+    }
+  </script>
+</body>
+</html>
+
