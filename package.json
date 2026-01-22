@@ -1,17 +1,23 @@
 {
   "name": "family-location-tracker",
   "version": "1.0.0",
-  "description": "Family Location Tracking Web App dengan Screen Sharing",
+  "description": "Family Location Tracking Web App dengan Screen Sharing - Auto-deploy ke Railway",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "deploy": "chmod +x deploy.sh && ./deploy.sh",
+    "railway-up": "npx @railway/cli@latest up"
   },
   "dependencies": {
     "express": "^4.18.2",
     "socket.io": "^4.7.2",
+    "better-sqlite3": "^9.2.2",
     "bcryptjs": "^2.4.3",
     "uuid": "^9.0.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
 

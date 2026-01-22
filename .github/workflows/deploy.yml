@@ -1,0 +1,31 @@
+name: 🚀 Auto Deploy ke Railway
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📦 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: ⬢ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: 📥 Install Dependencies
+        run: npm ci
+
+      - name: 🚂 Deploy ke Railway
+        uses: gr2m/deploy-to-railway-app@v1
+        with:
+          railway-token: ${{ secrets.RAILWAY_TOKEN }}
+          service: family-location-tracker
+          env: production
+          upstream: ${{ github.ref }}
+
